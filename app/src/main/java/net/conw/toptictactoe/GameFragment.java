@@ -90,11 +90,27 @@ public class GameFragment extends Fragment {
             largeTile.setOwner(winner);
         }
         winner = mEntireBoard.findWinner();
+        Log.d("T4", "Entrie Board Winner: " + winner);
+        logWinner();
         mEntireBoard.setOwner(winner);
         updateAllTiles();
         if(winner != Tile.Owner.NEITHER) {
             ((GameActivity)getActivity()).reportWinner(winner);
         }
+    }
+
+    private void logWinner() {
+        String str = "";
+        for(int i = 0; i < 3; i++) {
+            for(int j = 0; j < 3; j++) {
+                str += mEntireBoard.getSubTiles()[i * 3 + j].findWinner() + " ";
+            }
+            str += '\n';
+        }
+        Log.d("T4", "++++++++++++++++++++++++++\n" + str);
+
+        Log.d("T4", "totalX: " + mEntireBoard.totalX[0] + " " + mEntireBoard.totalX[1] + " " + mEntireBoard.totalX[2] + " " + mEntireBoard.totalX[3]);
+        Log.d("T4", "totalO: " + mEntireBoard.totalO[0] + " " + mEntireBoard.totalO[1] + " " + mEntireBoard.totalO[2] + " " + mEntireBoard.totalO[3]);
     }
 
     private void switchTurns() {

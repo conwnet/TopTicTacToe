@@ -1,11 +1,19 @@
 package net.conw.toptictactoe;
 
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
 
 public class Tile {
+
+    /**
+     *  X => Player X
+     *  O => Player O
+     *  NEITHER => No one win this(default)
+     *  BOTH => Tie
+     */
     public enum Owner {
         X, O, NEITHER, BOTH
     }
@@ -73,27 +81,36 @@ public class Tile {
         return level;
     }
 
+    int totalX[] = new int[4];
+    int totalO[] = new int[4];
+
+
     public Owner findWinner() {
         if(getOwner() != Owner.NEITHER)
             return getOwner();
 
-        int totalX[] = new int[4];
-        int totalO[] = new int[4];
+        //int totalX[] = new int[4];
+        //int totalO[] = new int[4];
+
+        for(int i = 0; i < 4; i++)
+            totalX[i] = totalO[i] = 0;
 
         countCaptures(totalX, totalO);
+        //Log.d("T4", "totalX: " + totalX[0] + " " + totalX[1] + " " + totalX[2] + " " + totalX[3]);
+        //Log.d("T4", "totalO: " + totalO[0] + " " + totalO[1] + " " + totalO[2] + " " + totalO[3]);
+
         if(totalX[3] > 0) return Owner.X;
         if(totalO[3] > 0) return Owner.O;
 
-        int total = 0;
         for(int row = 0; row < 3; row++) {
             for(int col = 0; col < 3; col++) {
                 Owner owner = mSubTiles[row * 3 + col].getOwner();
-                if(owner != owner.NEITHER) total++;
+                if(owner == owner.NEITHER)
+                    return owner.NEITHER;
             }
-            if(total == 9) return Owner.BOTH;
         }
 
-        return Owner.NEITHER;
+        return Owner.BOTH;
     }
 
     private void countCaptures(int totalX[], int totalO[]) {
